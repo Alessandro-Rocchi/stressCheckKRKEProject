@@ -4,6 +4,8 @@
 
 The project goes beyond simple data modeling (both journalistic and medical); it leverages **Automated Reasoning** to independently deduce the reliability of a news claim by comparing it against available scientific evidence, thereby minimizing human bias.
 
+**Website Project:** https://finalprojectkrae.netlify.app/
+
 ---
 
 ## 🎯 Project Goal
@@ -46,7 +48,7 @@ The local property `sc:usedEvidence` is declared as an `rdfs:subPropertyOf` of `
 
 To test StressCheck's reasoning capabilities locally:
 
-1. Download the `ontology.ttl` file and open it in **Protégé** (version 5.x or higher).
+1. Download the `stresscheck.ttl` file and open it in **Protégé** (version 5.x or higher).
 2. From the top menu, ensure **Pellet** (or Openllet) is selected as the active Reasoner. *(Note: HermiT may not process the SWRL rules correctly).*
 3. Navigate to the *Individuals by class* tab and examine the `ClaimReview` individuals (e.g., `ClaimReview1`).
 4. **Important:** Notice that in the *Object property assertions* panel, there are no manually assigned verdicts.
