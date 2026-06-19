@@ -1,0 +1,644 @@
+@prefix : <http://example.org/stresscheck#StressCheckOntology> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix sc: <http://example.org/stresscheck#> .
+@prefix eco: <http://purl.obolibrary.org/obo/ECO_> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix claims: <https://data.gesis.org/claimskg/> .
+@prefix schema: <https://schema.org/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@base <http://example.org/stresscheck#StressCheckOntology> .
+
+<http://example.org/stresscheck#StressCheckOntology> rdf:type owl:Ontology ;
+                                                      dcterms:creator "DHDK project group"@en ;
+                                                      dcterms:description "A small ontology and knowledge graph designed to support a journalistic fact-checking task focused on scientific claims about stress-reduction treatments."@en ;
+                                                      dcterms:title "StressCheck Ontology: AI-supported fact-checking of scientific news about stress-reduction treatments"@en ;
+                                                      rdfs:label "StressCheck Ontology"@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://purl.org/dc/terms/creator
+dcterms:creator rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/description
+dcterms:description rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/source
+dcterms:source rdf:type owl:AnnotationProperty .
+
+
+###  http://purl.org/dc/terms/title
+dcterms:title rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/ns/prov#generated
+prov:generated rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://example.org/stresscheck#claimsEffect
+sc:claimsEffect rdf:type owl:ObjectProperty ;
+                rdfs:domain sc:NewsClaim ;
+                rdfs:range sc:Effect ;
+                dcterms:description "The claimsEffect property associates a news claim with the outcome or effect being asserted. This relationship is fundamental to the StressCheck ontology because fact-checking activities are primarily concerned with evaluating whether a claimed effect is supported by scientific evidence. Examples include claims that a treatment reduces stress, lowers cortisol levels, improves wellbeing or prevents stress-related symptoms. By explicitly representing effects, the ontology enables comparison between journalistic claims and measured outcomes reported in scientific studies." ;
+                rdfs:comment "Links a claim to the effect that is asserted to result from a treatment or intervention." ;
+                rdfs:label "claims effect"@en .
+
+
+###  http://example.org/stresscheck#containsClaim
+sc:containsClaim rdf:type owl:ObjectProperty ;
+                 rdfs:domain sc:NewsArticle ;
+                 rdfs:range sc:NewsClaim ;
+                 dcterms:description "The containsClaim property connects a journalistic publication with the factual assertions identified within that publication. This separation allows multiple claims to be represented independently while maintaining provenance information about their source article. The property supports traceability, explainability and future automated claim extraction workflows." ;
+                 rdfs:comment "Links a news article to the claim extracted from it. Supports traceability and explainability."@en ,
+                              "Links a news article to a claim extracted from its content." ;
+                 rdfs:label "contains claim"@en .
+
+
+###  http://example.org/stresscheck#hasEvidenceType
+sc:hasEvidenceType rdf:type owl:ObjectProperty ;
+                   rdfs:domain sc:ScientificStudy ;
+                   rdfs:range sc:EvidenceType ;
+                   dcterms:description "The hasEvidenceType property identifies the methodological category of a scientific study. Evidence types may include clinical trials, observational studies, preclinical research or animal studies. This distinction is essential because verdict generation depends heavily on the quality and reliability of the evidence available." ;
+                   rdfs:comment "Associates a scientific study with its corresponding evidence category." ;
+                   rdfs:label "has evidence type"@en .
+
+
+###  http://example.org/stresscheck#hasPopulation
+sc:hasPopulation rdf:type owl:ObjectProperty ;
+                 rdfs:domain sc:ScientificStudy ;
+                 rdfs:range sc:Population ;
+                 dcterms:description "The hasPopulation property identifies the target group involved in a study or referenced by a claim. Examples include adults, students, children or animal models. Population matching is a critical component of scientific fact-checking because evidence derived from one population cannot always be generalized to another." ;
+                 rdfs:comment "Associates a study or claim with the population under consideration." ;
+                 rdfs:label "has population"@en .
+
+
+###  http://example.org/stresscheck#hasVerdict
+sc:hasVerdict rdf:type owl:ObjectProperty ;
+              rdfs:domain sc:ClaimReview ;
+              rdfs:range sc:Verdict ;
+              dcterms:description "The hasVerdict property links a claim review to the conclusion generated after evidence evaluation. Possible verdicts include Supported, Exaggerated, Unsupported and Unclear. This property represents the final outcome of the fact-checking process and is intended to be generated automatically through reasoning mechanisms." ;
+              rdfs:comment "Associates a review with the final fact-checking verdict."@en ,
+                           "Associates a review activity with its fact-checking verdict." ;
+              rdfs:label "has verdict"@en .
+
+
+###  http://example.org/stresscheck#mentionsTreatment
+sc:mentionsTreatment rdf:type owl:ObjectProperty ;
+                     rdfs:domain sc:NewsClaim ;
+                     rdfs:range sc:Treatment ;
+                     dcterms:description "The mentionsTreatment property identifies the treatment being discussed within a news claim. Examples include meditation, breathing therapy, supplements and pharmaceutical interventions. Representing treatments explicitly enables comparison between claims and scientific studies investigating the same intervention." ;
+                     rdfs:comment "Links a claim to the treatment, intervention or product mentioned in the statement." ;
+                     rdfs:label "mentions treatment"@en .
+
+
+###  http://example.org/stresscheck#reviewsClaim
+sc:reviewsClaim rdf:type owl:ObjectProperty ;
+                rdfs:domain sc:ClaimReview ;
+                rdfs:range sc:NewsClaim ;
+                dcterms:description "The reviewsClaim property establishes the relationship between a review activity and the claim under examination. This property is essential for provenance and allows users to understand exactly which claim generated a particular verdict." ;
+                rdfs:comment "Associates a fact-checking review with the claim that is being evaluated." ;
+                rdfs:label "reviews claim"@en .
+
+
+###  http://example.org/stresscheck#supportedByStudy
+sc:supportedByStudy rdf:type owl:ObjectProperty ;
+                    rdfs:domain sc:NewsClaim ;
+                    rdfs:range sc:ScientificStudy ;
+                    dcterms:description "The supportedByStudy property connects a claim with scientific evidence relevant to its verification. This relationship is central to the reasoning process because verdicts depend on the quantity, quality and relevance of the associated studies." ;
+                    rdfs:comment "Associates a claim with the scientific study used as evidence during verification."@en ,
+                                 "Links a claim to the scientific study used as supporting evidence." ;
+                    rdfs:label "supported by study"@en .
+
+
+###  http://example.org/stresscheck#targetsCondition
+sc:targetsCondition rdf:type owl:ObjectProperty ;
+                    rdfs:domain sc:NewsClaim ;
+                    rdfs:range sc:Condition ;
+                    dcterms:description "The targetsCondition property specifies the condition that a treatment seeks to improve, reduce or prevent. Examples include stress, anxiety or stress-related symptoms. This property helps align journalistic claims with scientific evidence investigating the same health condition." ;
+                    rdfs:comment "Associates a treatment or claim with the condition it is intended to affect." ;
+                    rdfs:label "targets condition"@en .
+
+
+###  http://example.org/stresscheck#usedEvidence
+sc:usedEvidence rdf:type owl:ObjectProperty ;
+                rdfs:subPropertyOf prov:used ;
+                rdfs:domain sc:ClaimReview ;
+                rdfs:range sc:ScientificStudy ;
+                dcterms:description "The usedEvidence property records the scientific studies, datasets or evidence resources consulted during a fact-checking activity. This property is derived from the PROV-O provenance ontology and plays a critical role in ensuring transparency and explainability. By explicitly identifying the evidence used during evaluation, the ontology allows users to understand how a verdict was produced and to verify the underlying reasoning process. The property also supports reproducibility, auditability and trust by enabling independent verification of fact-checking decisions." ;
+                rdfs:comment "Links a fact-checking activity or review process to the evidence resources used during the evaluation of a claim." ;
+                rdfs:label "used evidence"@en .
+
+
+###  http://www.w3.org/ns/prov#used
+prov:used rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://example.org/stresscheck#claimText
+sc:claimText rdf:type owl:DatatypeProperty ;
+             rdfs:domain sc:NewsClaim ;
+             rdfs:range xsd:string ;
+             dcterms:description "The claimText property records the exact textual statement extracted from a news article. Maintaining the original formulation of the claim is essential for transparency, reproducibility and explainability within the fact-checking process. This property allows users to trace verdicts back to the precise statement that was evaluated. It also supports future integration with Natural Language Processing (NLP) and Large Language Models (LLMs), which may automatically extract claims from journalistic content. By preserving the original wording, claimText reduces ambiguity and enables comparisons between media claims and the scientific evidence used to support or refute them." ;
+             rdfs:comment "Stores the literal textual content of a news claim extracted from a journalistic source. This property preserves the original wording of the statement being evaluated and serves as the primary factual assertion analysed by the StressCheck system." ;
+             rdfs:label "claim text"@en .
+
+
+###  http://example.org/stresscheck#confidenceScore
+sc:confidenceScore rdf:type owl:DatatypeProperty ;
+                   rdfs:domain sc:ClaimReview ;
+                   rdfs:range xsd:decimal ;
+                   dcterms:description "The confidenceScore property stores a numerical estimate representing the degree of confidence in a fact-checking verdict. This value is not inferred directly by OWL reasoning because ontology reasoners are designed to classify entities into discrete categories rather than calculate continuous numerical values. Consequently, confidence scores should be produced by an external methodology or scoring system. In StressCheck, confidence may be derived from factors such as evidence quality, study design, sample size, replication strength and population match between the scientific study and the journalistic claim. The property supports transparency by communicating the strength of the available evidence rather than presenting verdicts as absolute truths." ;
+                   rdfs:comment """OWL reasoners operate with logical axioms and cannot derive continuous numerical confidence values such as 0.55 or 0.85 from standard ontology semantics. Confidence should therefore be computed by an external module. Suggested formula:
+0.40 Evidence Quality + 0.25 Sample Size + 0.20 Replication + 0.15 Population Match.""" ,
+                                "Represents the confidence associated with a fact-checking assessment. The score provides an indication of the reliability of the generated verdict based on the quality and relevance of the supporting evidence." ;
+                   rdfs:label "confidence score"@en .
+
+
+###  http://example.org/stresscheck#publicationDate
+sc:publicationDate rdf:type owl:DatatypeProperty ;
+                   rdfs:domain sc:NewsArticle ;
+                   rdfs:range xsd:date ;
+                   dcterms:description "The publicationDate property records the date on which an information resource became publicly available. Capturing temporal information is important because scientific knowledge evolves over time. New evidence may strengthen, weaken or contradict previous findings. Recording publication dates therefore supports provenance tracking, historical analysis and evidence assessment. This property also facilitates future extensions involving temporal reasoning, evidence freshness evaluation and chronological reconstruction of fact-checking activities." ;
+                   rdfs:comment "Stores the publication date associated with a news article, scientific study or review activity." ;
+                   rdfs:label "publication date"@en .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://example.org/stresscheck#ClaimReview
+sc:ClaimReview rdf:type owl:Class ;
+               rdfs:subClassOf schema:ClaimReview ;
+               dcterms:description "Detailed semantic definition of ClaimReview" ;
+               rdfs:comment "The ClaimReview class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+               rdfs:label "Claim Review"@en .
+
+
+###  http://example.org/stresscheck#Condition
+sc:Condition rdf:type owl:Class ;
+             dcterms:description "Detailed semantic definition of Condition." ;
+             rdfs:comment "The Condition class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+             rdfs:label "Condition"@en .
+
+
+###  http://example.org/stresscheck#Effect
+sc:Effect rdf:type owl:Class ;
+          rdfs:subClassOf sc:Condition ;
+          dcterms:description "Detailed semantic definition of Effect" ;
+          rdfs:comment "The Effect class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+          rdfs:label "Effect"@en .
+
+
+###  http://example.org/stresscheck#EvidenceType
+sc:EvidenceType rdf:type owl:Class ;
+                dcterms:description "Detailed semantic definition of EvidenceType." ;
+                rdfs:comment "The EvidenceType class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+                rdfs:label "Evidence Type"@en .
+
+
+###  http://example.org/stresscheck#FactCheckingActivity
+sc:FactCheckingActivity rdf:type owl:Class ;
+                        rdfs:subClassOf prov:Activity ;
+                        dcterms:description "Detailed semantic definition of FactCheckingActivity." ;
+                        rdfs:comment "The FactCheckingActivity class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+                        rdfs:label "Fact-checking Activity"@en .
+
+
+###  http://example.org/stresscheck#NewsArticle
+sc:NewsArticle rdf:type owl:Class ;
+               rdfs:subClassOf schema:NewsArticle ;
+               rdfs:comment "Represents a journalistic publication serving as the source of one or more factual claims. This class captures the media artifact under analysis and enables provenance tracking, publication metadata, transparency, and traceability throughout the fact-checking workflow. Reuse of Schema.org NewsArticle improves interoperability with web publishing ecosystems."@en ;
+               rdfs:label "News Article"@en .
+
+
+###  http://example.org/stresscheck#NewsClaim
+sc:NewsClaim rdf:type owl:Class ;
+             rdfs:subClassOf schema:CreativeWork ;
+             rdfs:comment "A factual claim extracted from a journalistic article."@en ,
+                          "Central knowledge unit of StressCheck. A NewsClaim models an explicit or implicit factual assertion extracted from journalistic content. Claims are linked to treatments, effects, conditions, populations, studies, evidence types and verdicts, enabling explainable AI-supported fact-checking."@en ;
+             rdfs:label "News Claim"@en .
+
+
+###  http://example.org/stresscheck#Population
+sc:Population rdf:type owl:Class ;
+              dcterms:description "Detailed semantic definition of Population." ;
+              rdfs:comment "The Population class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+              rdfs:label "Population"@en .
+
+
+###  http://example.org/stresscheck#ScientificStudy
+sc:ScientificStudy rdf:type owl:Class ;
+                   rdfs:subClassOf sio:SIO_000747 ;
+                   dcterms:description "Detailed semantic definition of ScientificStudy." ;
+                   rdfs:comment "A study used as evidence during the fact-checking process."@en ,
+                                "Represents scientific evidence used during claim verification. Studies provide the empirical basis supporting or contradicting claims. Evidence quality, population match, methodology and study type determine the reliability of verdict generation."@en ,
+                                "The ScientificStudy class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+                   rdfs:label "Scientific Study"@en .
+
+
+###  http://example.org/stresscheck#StressReductionTreatment
+sc:StressReductionTreatment rdf:type owl:Class ;
+                            rdfs:subClassOf sc:Treatment ;
+                            dcterms:description "Detailed semantic definition of StressReductionTreatment." ;
+                            rdfs:comment "The StressReductionTreatment class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+                            rdfs:label "Stress Reduction Treatment"@en .
+
+
+###  http://example.org/stresscheck#Treatment
+sc:Treatment rdf:type owl:Class ;
+             dcterms:description "Detailed semantic definition of Treatment." ;
+             rdfs:comment "The Treatment class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+             rdfs:label "Treatment"@en .
+
+
+###  http://example.org/stresscheck#Verdict
+sc:Verdict rdf:type owl:Class ;
+           dcterms:description "Detailed semantic definition of Verdict." ;
+           rdfs:comment "Represents the outcome of the fact-checking process. Verdicts are intended to be generated automatically through reasoning or SPARQL rules rather than manual assignment."@en ,
+                        "The Verdict class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." ;
+           rdfs:label "Verdict"@en .
+
+
+###  http://semanticscience.org/resource/SIO_000747
+sio:SIO_000747 rdf:type owl:Class .
+
+
+###  http://www.w3.org/ns/prov#Activity
+prov:Activity rdf:type owl:Class .
+
+
+###  https://schema.org/ClaimReview
+schema:ClaimReview rdf:type owl:Class .
+
+
+###  https://schema.org/CreativeWork
+schema:CreativeWork rdf:type owl:Class .
+
+
+###  https://schema.org/NewsArticle
+schema:NewsArticle rdf:type owl:Class ;
+                   dcterms:description "Detailed semantic definition of NewsArticle." ;
+                   rdfs:comment "The NewsArticle class represents a core conceptual component of the StressCheck knowledge graph. It is included to support transparent representation of fact-checking knowledge. The class enables traceability, explainability, semantic interoperability and automated reasoning. Instances belonging to this class are intended to participate in RDF statements linking claims, evidence, treatments, populations and verdicts. This class contributes to the overall goal of helping journalists evaluate scientific claims about stress reduction. The class is documented extensively to facilitate ontology reuse, maintenance and future extension." .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://example.org/stresscheck#Adults
+sc:Adults rdf:type owl:NamedIndividual ,
+                   sc:Population ;
+          dcterms:description "Adults is a population category representing mature human individuals participating in research or targeted by journalistic claims. This individual is used to evaluate population matching between claims and scientific evidence. Accurate population representation is necessary to avoid unsupported generalizations." ,
+                              "Semantic description of Adults." ;
+          rdfs:comment "Represents adult human participants involved in a scientific study or referenced by a claim." ;
+          rdfs:label "adults"@en .
+
+
+###  http://example.org/stresscheck#Animals
+sc:Animals rdf:type owl:NamedIndividual ,
+                    sc:Population ;
+           dcterms:description "Animals is a population category representing experimental animal models used in preclinical research. Evidence derived from animal studies may provide useful preliminary insights but typically cannot justify strong claims about effects in humans without additional clinical evidence." ,
+                               "Semantic description of Animals." ;
+           rdfs:comment "Represents non-human animal subjects used in scientific research." ;
+           rdfs:label "animals"@en .
+
+
+###  http://example.org/stresscheck#Article1
+sc:Article1 rdf:type owl:NamedIndividual ,
+                     sc:NewsArticle ;
+            sc:containsClaim sc:Claim1 ;
+            sc:publicationDate "2026-05-01"^^xsd:date ;
+            dcterms:source "Science News Example"@en ;
+            rdfs:label "Meditation shown to reduce cortisol levels in adults"@en .
+
+
+###  http://example.org/stresscheck#Article2
+sc:Article2 rdf:type owl:NamedIndividual ,
+                     sc:NewsArticle ;
+            sc:containsClaim sc:Claim2 ;
+            sc:publicationDate "2026-05-05"^^xsd:date ;
+            dcterms:source "Health Blog Example"@en ;
+            rdfs:label "Supplement X proven to reduce stress in adults"@en .
+
+
+###  http://example.org/stresscheck#Article3
+sc:Article3 rdf:type owl:NamedIndividual ,
+                     sc:NewsArticle ;
+            sc:containsClaim sc:Claim3 ;
+            sc:publicationDate "2026-05-10"^^xsd:date ;
+            dcterms:source "Online Health Magazine Example"@en ;
+            rdfs:label "Drug Y completely prevents stress-related symptoms"@en .
+
+
+###  http://example.org/stresscheck#Article4
+sc:Article4 rdf:type owl:NamedIndividual ,
+                     sc:NewsArticle ;
+            sc:containsClaim sc:Claim4 ;
+            sc:publicationDate "2026-05-12"^^xsd:date ;
+            dcterms:source "University Wellbeing Example"@en ;
+            rdfs:label "Breathing therapy may reduce stress in students"@en .
+
+
+###  http://example.org/stresscheck#BreathingTherapy
+sc:BreathingTherapy rdf:type owl:NamedIndividual ,
+                             sc:StressReductionTreatment ;
+                    dcterms:description "Breathing Therapy represents controlled breathing interventions used to manage stress and improve wellbeing. The individual is included as an example treatment for demonstrating evidence-based claim verification within the StressCheck prototype." ;
+                    rdfs:comment "Represents breathing-based therapeutic techniques intended to reduce stress." ;
+                    rdfs:label "breathing therapy"@en .
+
+
+###  http://example.org/stresscheck#Claim1
+sc:Claim1 rdf:type owl:NamedIndividual ,
+                   sc:NewsClaim ;
+          sc:claimsEffect sc:LowerCortisol ;
+          sc:mentionsTreatment sc:Meditation ;
+          sc:supportedByStudy sc:Study1 ;
+          sc:targetsCondition sc:Stress ;
+          sc:claimText "Meditation lowers cortisol levels in adults."@en ;
+          rdfs:label "Meditation lowers cortisol levels in adults"@en .
+
+
+###  http://example.org/stresscheck#Claim2
+sc:Claim2 rdf:type owl:NamedIndividual ,
+                   sc:NewsClaim ;
+          sc:claimsEffect sc:StressReduction ;
+          sc:mentionsTreatment sc:SupplementX ;
+          sc:supportedByStudy sc:Study2 ;
+          sc:targetsCondition sc:Stress ;
+          sc:claimText "Supplement X has been proven to reduce stress in adults."@en ;
+          rdfs:label "Supplement X has been proven to reduce stress in adults"@en .
+
+
+###  http://example.org/stresscheck#Claim3
+sc:Claim3 rdf:type owl:NamedIndividual ,
+                   sc:NewsClaim ;
+          sc:claimsEffect sc:StressReduction ;
+          sc:mentionsTreatment sc:DrugY ;
+          sc:supportedByStudy sc:Study3 ;
+          sc:targetsCondition sc:Stress ;
+          sc:claimText "Drug Y completely prevents stress-related symptoms."@en ;
+          rdfs:label "Drug Y completely prevents stress-related symptoms"@en .
+
+
+###  http://example.org/stresscheck#Claim4
+sc:Claim4 rdf:type owl:NamedIndividual ,
+                   sc:NewsClaim ;
+          sc:claimsEffect sc:StressReduction ;
+          sc:mentionsTreatment sc:BreathingTherapy ;
+          sc:supportedByStudy sc:Study4 ;
+          sc:targetsCondition sc:Stress ;
+          sc:claimText "Breathing therapy may reduce stress in students."@en ;
+          rdfs:label "Breathing therapy may reduce stress in students"@en .
+
+
+###  http://example.org/stresscheck#ClaimReview1
+sc:ClaimReview1 rdf:type owl:NamedIndividual ,
+                         sc:ClaimReview ;
+                sc:hasVerdict sc:Supported ;
+                sc:reviewsClaim sc:Claim1 ;
+                sc:usedEvidence sc:Study1 ;
+                sc:confidenceScore 0.85 ;
+                dcterms:description "ClaimReview1 documents the evaluation process performed for Claim 1. It records the evidence consulted, the reasoning applied and the final verdict generated by the StressCheck system. This individual contributes to transparency by making the fact-checking process traceable and reproducible." ;
+                rdfs:comment "Represents the fact-checking assessment associated with Claim 1, including the evidence reviewed and the verdict assigned during the evaluation process." ;
+                rdfs:label "Review of Claim 1"@en .
+
+
+###  http://example.org/stresscheck#ClaimReview2
+sc:ClaimReview2 rdf:type owl:NamedIndividual ,
+                         sc:ClaimReview ;
+                sc:hasVerdict sc:Exaggerated ;
+                sc:reviewsClaim sc:Claim2 ;
+                sc:usedEvidence sc:Study2 ;
+                sc:confidenceScore 0.78 ;
+                dcterms:description "ClaimReview2 captures the review activity conducted for Claim 2. The individual links the evaluated claim with the supporting evidence and the resulting verdict, allowing users to understand how the conclusion was reached." ;
+                rdfs:comment "Represents the fact-checking assessment associated with Claim 2." ;
+                rdfs:label "Review of Claim 2"@en .
+
+
+###  http://example.org/stresscheck#ClaimReview3
+sc:ClaimReview3 rdf:type owl:NamedIndividual ,
+                         sc:ClaimReview ;
+                sc:hasVerdict sc:Unsupported ;
+                sc:reviewsClaim sc:Claim3 ;
+                sc:usedEvidence sc:Study3 ;
+                sc:confidenceScore 0.71 ;
+                dcterms:description "ClaimReview3 records the verification process carried out for Claim 3. The review preserves the relationship between the claim, the evidence examined and the final verdict generated within the ontology." ;
+                rdfs:comment "Represents the fact-checking assessment associated with Claim 3." ;
+                rdfs:label "Review of Claim 3"@en .
+
+
+###  http://example.org/stresscheck#ClaimReview4
+sc:ClaimReview4 rdf:type owl:NamedIndividual ,
+                         sc:ClaimReview ;
+                sc:hasVerdict sc:Unclear ;
+                sc:reviewsClaim sc:Claim4 ;
+                sc:usedEvidence sc:Study4 ;
+                sc:confidenceScore 0.55 ;
+                dcterms:description "ClaimReview4 documents the evidence evaluation process performed for Claim 4 and stores the corresponding verdict. This individual supports explainability and auditability within the StressCheck framework." ;
+                rdfs:comment "Represents the fact-checking assessment associated with Claim 4." ;
+                rdfs:label "Review of Claim 4"@en .
+
+
+###  http://example.org/stresscheck#ClinicalTrial
+sc:ClinicalTrial rdf:type owl:NamedIndividual ,
+                          sc:EvidenceType ;
+                 dcterms:description "ClinicalTrial is an evidence category representing research conducted under controlled conditions involving human participants. Clinical trials are generally considered among the strongest forms of evidence for evaluating treatment effectiveness and safety." ;
+                 rdfs:comment "Represents a controlled experimental study conducted in human participants." ;
+                 rdfs:label "clinical trial"@en .
+
+
+###  http://example.org/stresscheck#DrugY
+sc:DrugY rdf:type owl:NamedIndividual ,
+                  sc:StressReductionTreatment ;
+         dcterms:description "Drug Y is a fictional drug used to demonstrate fact-checking scenarios involving insufficient or inconclusive evidence. The individual helps illustrate how the ontology distinguishes between supported claims and claims lacking adequate scientific support." ;
+         rdfs:comment "Represents a hypothetical pharmaceutical intervention included within the prototype dataset." ;
+         rdfs:label "Drug Y"@en .
+
+
+###  http://example.org/stresscheck#Exaggerated
+sc:Exaggerated rdf:type owl:NamedIndividual ,
+                        sc:Verdict ;
+               dcterms:description "The Exaggerated verdict is assigned when scientific evidence exists but does not fully justify the strength of the journalistic claim. This commonly occurs when evidence originates from animal studies, small pilot studies or limited observational research while the claim is presented as definitively proven. The category helps identify misleading simplifications and overstatements frequently encountered in science journalism." ;
+               rdfs:comment "Verdict assigned when evidence exists but does not fully justify the strength of the journalistic statement."@en ,
+                            "Represents a verdict indicating that a claim overstates the strength, scope or certainty of the available evidence." ;
+               rdfs:label "Exaggerated"@en .
+
+
+###  http://example.org/stresscheck#FactCheckingRun1
+sc:FactCheckingRun1 rdf:type owl:NamedIndividual ,
+                             sc:FactCheckingActivity ;
+                    prov:used sc:Article1 ,
+                              sc:Article2 ,
+                              sc:Article3 ,
+                              sc:Article4 ;
+                    rdfs:label "Fact-checking run for StressCheck sample dataset"@en ;
+                    prov:generated sc:ClaimReview1 ,
+                                   sc:ClaimReview2 ,
+                                   sc:ClaimReview3 ,
+                                   sc:ClaimReview4 .
+
+
+###  http://example.org/stresscheck#LowerCortisol
+sc:LowerCortisol rdf:type owl:NamedIndividual ,
+                          sc:Effect ;
+                 dcterms:description "Lower Cortisol Levels represents a measurable biological outcome frequently used as an indicator of stress reduction. This individual demonstrates how objective physiological outcomes can be linked to treatments and evaluated through scientific evidence." ;
+                 rdfs:comment "Represents a physiological effect involving a reduction in cortisol concentration." ;
+                 rdfs:label "lower cortisol levels"@en .
+
+
+###  http://example.org/stresscheck#Meditation
+sc:Meditation rdf:type owl:NamedIndividual ,
+                       sc:StressReductionTreatment ;
+              dcterms:description "Meditation is modelled as a stress-reduction treatment investigated within scientific studies and discussed in journalistic claims. The individual serves as an example intervention used to demonstrate how treatments are connected to claims, evidence and outcomes within the ontology." ;
+              rdfs:comment "Represents meditation as a stress-reduction intervention." ;
+              rdfs:label "meditation"@en .
+
+
+###  http://example.org/stresscheck#ObservationalStudy
+sc:ObservationalStudy rdf:type owl:NamedIndividual ,
+                               sc:EvidenceType ;
+                      dcterms:description "ObservationalStudy represents a methodological approach in which researchers collect data without manipulating treatment allocation. Although valuable, observational evidence is generally more susceptible to bias than randomized clinical trials." ;
+                      rdfs:comment "Represents research that observes participants without assigning interventions." ;
+                      rdfs:label "observational study"@en .
+
+
+###  http://example.org/stresscheck#PreclinicalStudy
+sc:PreclinicalStudy rdf:type owl:NamedIndividual ,
+                             sc:EvidenceType ;
+                    dcterms:description "PreclinicalStudy refers to research performed before clinical evaluation in humans. Such studies provide preliminary evidence but are generally insufficient to support strong therapeutic claims directed at human populations." ;
+                    rdfs:comment "Represents laboratory or animal-based research conducted before human testing." ;
+                    rdfs:label "preclinical study"@en .
+
+
+###  http://example.org/stresscheck#ReviewEvidence
+sc:ReviewEvidence rdf:type owl:NamedIndividual ,
+                           sc:EvidenceType ;
+                  rdfs:label "review evidence"@en .
+
+
+###  http://example.org/stresscheck#Stress
+sc:Stress rdf:type owl:NamedIndividual ,
+                   sc:Condition ;
+          dcterms:description "Stress is modelled as a condition targeted by treatments and discussed within journalistic claims. The condition serves as the central domain focus of the ontology and provides the thematic context connecting treatments, studies, effects and verdicts." ;
+          rdfs:comment "Represents the primary health-related condition investigated within the StressCheck prototype." ;
+          rdfs:label "stress"@en .
+
+
+###  http://example.org/stresscheck#StressReduction
+sc:StressReduction rdf:type owl:NamedIndividual ,
+                            sc:Effect ;
+                   dcterms:description "Stress Reduction is an effect representing a measurable decrease in stress intensity or frequency. The individual is used to connect treatments and scientific evidence with desired health outcomes and serves as a key target outcome in the fact-checking process." ;
+                   rdfs:comment "Represents a beneficial outcome involving a decrease in stress levels." ;
+                   rdfs:label "stress reduction"@en .
+
+
+###  http://example.org/stresscheck#Students
+sc:Students rdf:type owl:NamedIndividual ,
+                     sc:Population ;
+            dcterms:description "Semantic description of Students." ,
+                                "Students is a population category used to model research participants enrolled in educational institutions. This population may differ significantly from the general adult population in terms of age, stress exposure and behavioural characteristics. Population-specific evidence should not automatically be generalized beyond the studied group." ;
+            rdfs:comment "Represents students participating in scientific research or referenced by claims." ;
+            rdfs:label "students"@en .
+
+
+###  http://example.org/stresscheck#Study1
+sc:Study1 rdf:type owl:NamedIndividual ,
+                   sc:ScientificStudy ;
+          sc:hasEvidenceType sc:ClinicalTrial ;
+          sc:hasPopulation sc:Adults ;
+          rdfs:label "Randomized clinical trial on meditation and cortisol"@en .
+
+
+###  http://example.org/stresscheck#Study2
+sc:Study2 rdf:type owl:NamedIndividual ,
+                   sc:ScientificStudy ;
+          sc:hasEvidenceType sc:PreclinicalStudy ;
+          sc:hasPopulation sc:Animals ;
+          rdfs:label "Animal study on Supplement X and stress-related behaviour"@en .
+
+
+###  http://example.org/stresscheck#Study3
+sc:Study3 rdf:type owl:NamedIndividual ,
+                   sc:ScientificStudy ;
+          sc:hasEvidenceType sc:ObservationalStudy ;
+          sc:hasPopulation sc:Adults ;
+          rdfs:label "Small observational study on Drug Y"@en .
+
+
+###  http://example.org/stresscheck#Study4
+sc:Study4 rdf:type owl:NamedIndividual ,
+                   sc:ScientificStudy ;
+          sc:hasEvidenceType sc:ObservationalStudy ;
+          sc:hasPopulation sc:Students ;
+          rdfs:label "Pilot study on breathing therapy among students"@en .
+
+
+###  http://example.org/stresscheck#SupplementX
+sc:SupplementX rdf:type owl:NamedIndividual ,
+                        sc:StressReductionTreatment ;
+               dcterms:description "Supplement X is a fictional treatment included for demonstration purposes. Its role is to illustrate situations in which journalistic claims may be based on evidence derived exclusively from animal or preclinical studies, potentially leading to exaggerated conclusions." ;
+               rdfs:comment "Represents a hypothetical dietary supplement used as an illustrative example in the prototype dataset." ;
+               rdfs:label "Supplement X"@en .
+
+
+###  http://example.org/stresscheck#Supported
+sc:Supported rdf:type owl:NamedIndividual ,
+                      sc:Verdict ;
+             dcterms:description "Semantic description of Supported." ,
+                                 "Supported is a verdict category assigned when the available scientific evidence provides strong and relevant support for a journalistic claim. Typically, this verdict is produced when the supporting studies involve the same treatment, outcome and target population described by the claim and when the underlying evidence is considered methodologically robust. The Supported verdict indicates that the claim is consistent with the best available evidence at the time of evaluation. However, it does not imply absolute certainty, as scientific knowledge remains subject to revision through future research." ;
+             rdfs:comment "Verdict assigned when high-quality evidence directly supports the claim."@en ,
+                          "Represents a verdict indicating that the available scientific evidence directly supports the claim being evaluated." ;
+             rdfs:label "Supported"@en .
+
+
+###  http://example.org/stresscheck#Unclear
+sc:Unclear rdf:type owl:NamedIndividual ,
+                    sc:Verdict ;
+           dcterms:description "Unclear is a verdict category assigned when the available scientific evidence does not allow a definitive assessment of the claim. This situation may occur when studies provide conflicting results, when evidence is limited, when sample sizes are small, or when research remains at a preliminary stage. The purpose of this verdict is to prevent overconfident conclusions and to communicate uncertainty explicitly. This category reflects an important principle of responsible fact-checking: lack of evidence should not automatically be interpreted as evidence against a claim." ;
+           rdfs:comment "Verdict assigned when evidence is insufficient, conflicting, preliminary or ambiguous."@en ,
+                        "Represents a verdict indicating that the available evidence is insufficient, ambiguous or inconclusive." ;
+           rdfs:label "Unclear"@en .
+
+
+###  http://example.org/stresscheck#Unsupported
+sc:Unsupported rdf:type owl:NamedIndividual ,
+                        sc:Verdict ;
+               dcterms:description "Unsupported is a verdict category assigned when no relevant scientific evidence can be identified to substantiate a claim. This verdict may also be used when the evidence presented is unrelated to the claim, methodologically inadequate, or fails to demonstrate the effect being asserted. The Unsupported category helps distinguish claims that are not currently backed by evidence from those that are merely uncertain. Its purpose is to improve transparency and encourage evidence-based communication within journalism." ;
+               rdfs:comment "Verdict assigned when available evidence fails to substantiate the claim."@en ,
+                            "Represents a verdict indicating that the claim lacks adequate supporting scientific evidence." ;
+               rdfs:label "Unsupported"@en .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+rdfs:isDefinedBy dcterms:description "ClaimReview1 documents the evaluation process performed for Claim 1. It records the evidence consulted, the reasoning applied and the final verdict generated by the StressCheck system. This individual contributes to transparency by making the fact-checking process traceable and reproducible." .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
